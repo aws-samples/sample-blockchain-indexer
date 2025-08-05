@@ -1,0 +1,13 @@
+[Unit]
+Description=Kafka Monitor Service
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/monitor_kafka.sh
+Type=oneshot
+User=ec2-user
+Group=ec2-user
+Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+[Install]
+WantedBy=multi-user.target

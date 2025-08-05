@@ -1,0 +1,9 @@
+[Unit]
+Description=Sync minutes behind of blockchain sync
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/syncStatus.sh
+
+[Install]
+WantedBy=multi-user.target

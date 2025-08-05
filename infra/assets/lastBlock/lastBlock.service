@@ -1,0 +1,11 @@
+[Unit]
+Description=Get latest block
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/lastBlock.sh
+User=ec2-user
+
+[Install]
+WantedBy=multi-user.target

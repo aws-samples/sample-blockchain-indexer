@@ -1,0 +1,48 @@
+[package]
+name = "kafka-exex"
+version = "0.1.0"
+edition = "2024"
+license = "MIT OR Apache-2.0"
+publish = false
+
+[dependencies]
+
+# reth
+reth = { git = "https://github.com/paradigmxyz/reth.git", tag = "v1.4.1"} # Reth
+reth-exex = { git = "https://github.com/paradigmxyz/reth.git", tag = "v1.4.1" } # Execution Extensions
+reth-node-ethereum = { git = "https://github.com/paradigmxyz/reth.git", tag = "v1.4.1" } # Ethereum Node implementation
+reth-tracing = { git = "https://github.com/paradigmxyz/reth.git", tag = "v1.4.1" } # Logging
+reth-execution-types = { git = "https://github.com/paradigmxyz/reth.git", tag = "v1.4.1" }
+
+# reth latest (don't use it to avoid frequent recompiles with new commits
+# reth = { git = "https://github.com/paradigmxyz/reth.git"} # Reth
+# reth-exex = { git = "https://github.com/paradigmxyz/reth.git" } # Execution Extensions
+# reth-node-ethereum = { git = "https://github.com/paradigmxyz/reth.git" } # Ethereum Node implementation
+# reth-tracing = { git = "https://github.com/paradigmxyz/reth.git" } # Logging
+# reth-execution-types = { git = "https://github.com/paradigmxyz/reth.git" }
+
+# Alloy
+alloy = { version = "1.0.5", features = ["full"] }
+
+# util
+eyre = "0.6" # Easy error handling
+futures-util = "0.3" # Stream utilities for consuming notifications
+dotenv = "0.15.0"
+
+# JSON and serde
+serde_json = "1.0.140"
+serde = "1.0.219"
+
+# async
+tokio = {version = "1", features = ["full"]}
+
+# AWS
+aws-config = {version = "1.6.0", default-features = false, features = ["behavior-version-latest", "rt-tokio", "rustls", "credentials-process"]}
+
+# kafka
+aws-msk-iam-sasl-signer = "1.0.0"
+rdkafka = {version = "0.37.0", features = ["ssl"]}
+
+# clap
+clap = "4"
+
