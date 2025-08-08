@@ -6,7 +6,7 @@
 # Customer and either Amazon Web Services, Inc. or Amazon Web Services EMEA SARL or both.
 
 # Install remaining packages w/o config
-dnf install -y git clang lz4 openssl-devel clang-devel gcc-c++ cmake java-23 inotify-tools
+dnf install -y git clang lz4 openssl-devel clang-devel gcc-c++ cmake java-23 inotify-tools postgresql16 maven
 
 groupadd -g 1002 blockchain
 useradd -u 1002 -g 1002 -m -s /bin/bash blockchain

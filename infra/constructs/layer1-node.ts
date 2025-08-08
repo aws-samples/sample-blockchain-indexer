@@ -18,6 +18,7 @@ export interface Layer1NodeProps extends cdk.StackProps {
   readonly extractionVolumeSize?: number;
   readonly vpc?: ec2.IVpc;
   readonly mskCluster: msk_alpha.ICluster;
+  // readonly flinkExecutionRoleArn?: string;
 }
 
 export class Layer1Node extends Construct {
@@ -25,6 +26,7 @@ export class Layer1Node extends Construct {
   readonly extractionVolumeSize: number;
   readonly vpc: ec2.IVpc;
   readonly mskCluster: msk_alpha.ICluster;
+  // readonly flinkExecutionRoleArn?: string;
 
   public instanceId: string;
   public instance: ec2.Instance;
@@ -32,17 +34,22 @@ export class Layer1Node extends Construct {
   constructor(scope: Construct, id: string, props?: Layer1NodeProps) {
     super(scope, id);
 
-    this.vpc = props?.vpc || ec2.Vpc.fromLookup(this, "DefaultVPC", { isDefault: true });
+    this.vpc =
+      props?.vpc || ec2.Vpc.fromLookup(this, "DefaultVPC", { isDefault: true });
+
+    // this.flinkExecutionRoleArn = props?.flinkExecutionRoleArn;
 
     // this.mskClusterArn = props?.mskClusterArn as string;
-    this.mskCluster = props?.mskCluster || new msk_alpha.Cluster(this, "MskCluster", {
-      clusterName: "Layer1NodeCluster",
-      kafkaVersion: msk_alpha.KafkaVersion.V3_6_0,
-      encryptionInTransit: {
-        clientBroker: msk_alpha.ClientBrokerEncryption.TLS,
-      },
-      vpc: this.vpc,
-    });
+    this.mskCluster =
+      props?.mskCluster ||
+      new msk_alpha.Cluster(this, "MskCluster", {
+        clusterName: "Layer1NodeCluster",
+        kafkaVersion: msk_alpha.KafkaVersion.V3_6_0,
+        encryptionInTransit: {
+          clientBroker: msk_alpha.ClientBrokerEncryption.TLS,
+        },
+        vpc: this.vpc,
+      });
 
     this.instanceType =
       props?.instanceType ||
@@ -65,7 +72,6 @@ export class Layer1Node extends Construct {
         iam.ManagedPolicy.fromAwsManagedPolicyName(
           "CloudWatchAgentServerPolicy"
         ),
-        iam.ManagedPolicy.fromAwsManagedPolicyName("AmazonS3FullAccess"),
       ],
     });
 
@@ -80,6 +86,34 @@ export class Layer1Node extends Construct {
         resources: ["*"],
       })
     );
+
+    instanceRole.addToPolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: [
+          "s3:ListAllMyBuckets",
+          "cloudformation:ListStacks",
+          "cloudformation:DescribeStacks",
+          "kinesisanalytics:CreateApplication",
+          "kinesisanalytics:StartApplication",
+          "rds:DescribeDBInstances",
+          "secretsmanager:GetSecretValue",
+          "secretsmanager:DescribeSecret"
+        ],
+        resources: ["*"], // This action requires * as the resource
+      })
+    );
+
+    // Add PassRole permission for Flink execution role if provided
+    // if (this.flinkExecutionRoleArn) {
+    //   instanceRole.addToPolicy(
+    //     new iam.PolicyStatement({
+    //       effect: iam.Effect.ALLOW,
+    //       actions: ["iam:PassRole"],
+    //       resources: [this.flinkExecutionRoleArn],
+    //     })
+    //   );
+    // }
 
     // allow EC2 to write to Kafka
     const topicArn = `arn:aws:kafka:${cdk.Stack.of(this).region}:${
@@ -166,10 +200,12 @@ export class Layer1Node extends Construct {
     );
 
     // ../assets/sepolia-node-instancestore-userdata.sh is the template for the userdata script
-    const commands = fs.readFileSync(
-      path.join(__dirname, "../assets/layer1-node-userdata.sh"),
-      "utf8"
-    ).replace("__KAFKA_CLUSTER_ARN__", this.mskCluster.clusterArn);
+    const commands = fs
+      .readFileSync(
+        path.join(__dirname, "../assets/layer1-node-userdata.sh"),
+        "utf8"
+      )
+      .replace("__KAFKA_CLUSTER_ARN__", this.mskCluster.clusterArn);
 
     userData.addCommands(commands);
 
@@ -209,15 +245,36 @@ export class Layer1Node extends Construct {
     });
 
     // ingress rules
-    node.connections.allowFromAnyIpv4(ec2.Port.tcp(9000), "P2P traffic, Lighthouse");
-    node.connections.allowFromAnyIpv4(ec2.Port.udp(9000), "P2P traffic, Lighthouse");
-    node.connections.allowFromAnyIpv4(ec2.Port.udp(9001), "P2P traffic, Lighthouse");
+    node.connections.allowFromAnyIpv4(
+      ec2.Port.tcp(9000),
+      "P2P traffic, Lighthouse"
+    );
+    node.connections.allowFromAnyIpv4(
+      ec2.Port.udp(9000),
+      "P2P traffic, Lighthouse"
+    );
+    node.connections.allowFromAnyIpv4(
+      ec2.Port.udp(9001),
+      "P2P traffic, Lighthouse"
+    );
 
     node.connections.allowFromAnyIpv4(ec2.Port.tcp(30303), "P2P traffic, reth");
     node.connections.allowFromAnyIpv4(ec2.Port.udp(30303), "P2P traffic, reth");
-    node.connections.allowFrom( ec2.Peer.ipv4(this.vpc.vpcCidrBlock), ec2.Port.tcp(8545), "RPC queries, reth" );
-    node.connections.allowFrom( ec2.Peer.ipv4(this.vpc.vpcCidrBlock), ec2.Port.tcp(8546), "WS queries, reth" );
-    node.connections.allowFrom( ec2.Peer.ipv4(this.vpc.vpcCidrBlock), ec2.Port.tcp(9001), "metrics, reth" );
+    node.connections.allowFrom(
+      ec2.Peer.ipv4(this.vpc.vpcCidrBlock),
+      ec2.Port.tcp(8545),
+      "RPC queries, reth"
+    );
+    node.connections.allowFrom(
+      ec2.Peer.ipv4(this.vpc.vpcCidrBlock),
+      ec2.Port.tcp(8546),
+      "WS queries, reth"
+    );
+    node.connections.allowFrom(
+      ec2.Peer.ipv4(this.vpc.vpcCidrBlock),
+      ec2.Port.tcp(9001),
+      "metrics, reth"
+    );
 
     monitorExtractionAsset.grantRead(node);
     lastBlockAsset.grantRead(node);
