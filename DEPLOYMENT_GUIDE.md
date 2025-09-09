@@ -21,7 +21,7 @@ npm install
 cdk deploy Indexer
 ```
 
-This command deploys the necessary AWS resources, which incur cost. Note that deployment can take approximately 40-60 min. Because blockchain data is in the Terrabyte range (depending on the chain), the resources are are selected here to work with Etheruem mainnet data:
+This command deploys the necessary AWS resources, which incur cost. Note that deployment can take approximately 40-60 min. Because blockchain data is in the Terrabyte range (depending on the chain), the resources are selected here to work with Etheruem mainnet data:
 
 * An MSK cluster using m7g.xlarge instances with tiered storage
 * Amazon EC2 instances for running blockchain nodes (Holesky on i8g.2xlarge and Mainnet on i8g.4xlarge). These instance types support ephemeral storage for highly utilized storage, which the blockchain node is using.
@@ -42,7 +42,7 @@ Complete the following steps to set up the blockchain node:
 
 `sudo su blockchain`
 
-**Install the required tools:**
+### Install the required tools:
 
 ### Install Rust
 ```
@@ -71,7 +71,7 @@ cargo install --locked jaq
 
 The following commands are for running the mainnet node. For a testnet like Holesky they must be adapted for the chain.
 
-**Run the blockchain node using screen sessions:**
+### Run the blockchain node using screen sessions:
 
 ### Create a screen session for reth
 `screen -S reth`
@@ -91,7 +91,7 @@ Press **Ctrl + A, D** to detach from the screen session. Create a new screen ses
 ### Create a screen session for lighthouse
 `screen -S lighthouse`
 
-**Run lighthouse (consensus client) in the screen session:**
+### Run lighthouse (consensus client) in the screen session:
 
 ### Inside the lighthouse screen session, run:
 ```
@@ -135,7 +135,7 @@ Create a screen session for the extraction:
 
 `screen -S extract`
 
-Run the extraction in the screen session. The two parameters -f and -t specifiy the first block (inclusively) and the last (to) block (exclusively). Choose the last block close the actual chain head so that as much data is extracted via cryo as possible. A number like <chain head> - 1000 is a good starting point. Take note of the number for starting the ExEx later.
+Run the extraction in the screen session. The two parameters -f and -t specify the first block (inclusively) and the last block (exclusively) to be extracted. The older the block number set in -f, the larger the extraction. Set -t to a block close to the actual chain head (most recent block) so that as much data is extracted via cryo as possible. A number like <chain head> - 1000 is a good starting point. *Take note of the number for starting the ExEx later*.
 ```
 cd /home/blockchain
 ./scripts/extract.sh -f 0 -t 1000000
@@ -208,7 +208,7 @@ TRANSFER\_BUCKET=$(aws s3api list-buckets --query 'Buckets[?starts\_with(Name, `
 ### Extract archive
 `tar -xzf kafka-emitter.tar.gz`
 
-**Build the Kafka emitter (as user blockchain):**
+### Build the Kafka emitter (as user blockchain):
 
 ### Build the emitter
 ```
@@ -225,7 +225,7 @@ Now we can implement the unidirectional data flow pattern by having the blockcha
 
 Press **Ctrl + C** to stop the reth node.
 
-**Run the reth node with the Kafka emitter extension. Use the same number as --exex-start-block that you as to block (-t) during the extraction.**
+### Run the reth node with the Kafka emitter extension. Use the same number as --exex-start-block that you as to block (-t) during the extraction.
 ```
 cd /home/blockchain/kafka-emitter-exex
 # Run the exex
