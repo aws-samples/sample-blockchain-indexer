@@ -281,15 +281,14 @@ Back on the **EC2 instance** (make sure you’re user blockchain) download the s
 `TRANSFER_BUCKET=$(aws s3api list-buckets --query "Buckets[?starts_with(Name, 'blockchain-indexer-file-transfer')].Name" --output text)`
 
 ### Download archive
-`aws s3 cp s3://${TRANSFER\_BUCKET}/flink.tar.gz .`
+`aws s3 cp s3://${TRANSFER_BUCKET}/flink.tar.gz .`
 
 ### Extract archive
 `tar -xzf flink.tar.gz`
 
 ### Compile the source code into a JAR-file and upload it to the transfer S3 bucket:
 
-`cd /home/blockchain/flink/punktransfers/
-mvn clean package`
+`cd /home/blockchain/flink/punktransfers/ && mvn clean package`
 
 This will have created punktransfers-1.0-SNAPSHOT.jar, that needs to be uploaded to the S3 bucket:
 
