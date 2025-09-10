@@ -320,7 +320,7 @@ Set the runtime properties to inform the application of the Kafka cluster:
 
 ![](./static/RuntimeProperties.png)
 
-Set the group ID to config, the Key to MSK\_BOOTSTRAP\_SERVERS and the value to the bootstrap servers for your cluster. You can get the from the MSK console or vial AWS CLI:
+Set the group ID to config, the Key to MSK\_BOOTSTRAP\_SERVERS and the value to the bootstrap servers for your cluster. You can get the from the MSK console or via AWS CLI:
 ```
 MSK_CLUSTER_ARN=$(aws cloudformation describe-stacks --stack-name Indexer --query "Stacks[0].Outputs[?OutputKey=='KafkaClusterArn'].OutputValue" --output text)
 MSK_BOOTSTRAP_SERVERS=$(aws kafka get-bootstrap-brokers --cluster-arn $MSK_CLUSTER_ARN --query "BootstrapBrokerStringSaslIam" --output text)
@@ -334,7 +334,7 @@ Save the changes and wait until it is configured.
 
 ### Modify the FLink IAM policy to allow access to Kafka:
 
-On the punktransfers overview page you see the IAM role that application uses. Click on it to modify it. On the next screen click on **Add Permissions** and **Attach inline policy**. In the JSON view paste the following permissions, save, and name the policy “KafakPolicy”.
+On the punktransfers overview page you see the IAM role that application uses. Click on it to modify it. On the next screen click on **Add Permissions** and **Create inline policy**. In the JSON view paste the following permissions, save, and name the policy “KafkaPolicy”.
 ```
 {
   "Version": "2012-10-17",
