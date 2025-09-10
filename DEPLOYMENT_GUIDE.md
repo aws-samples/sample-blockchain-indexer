@@ -199,7 +199,7 @@ Back on the **EC2 instance** (make sure you’re user blockchain) download the s
 ### Get S3 Bucket
 ```
 cd /home/blockchain
-TRANSFER_BUCKET=$(aws s3api list-buckets --query 'Buckets[?starts\_with(Name, 'blockchain-indexer-file-transfer')].Name' --output text)
+TRANSFER_BUCKET=$(aws s3api list-buckets --query "Buckets[?starts_with(Name, 'blockchain-indexer-file-transfer')].Name" --output text)
 ```
 
 ### Download archive
