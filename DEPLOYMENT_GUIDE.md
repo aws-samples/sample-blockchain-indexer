@@ -234,7 +234,7 @@ cargo run --bin kafka-emitter \
  --authrpc.jwtsecret /data/jwttoken/jwt.hex \
  --chain mainnet \
  --datadir /data/mainnet/reth \
- http \
+ --http \
  --exex-topic-prefix ethereum \
  --exex-start-block 1000000
 ```
