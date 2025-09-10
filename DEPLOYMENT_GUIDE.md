@@ -337,48 +337,49 @@ Save the changes and wait until it is configured.
 On the punktransfers overview page you see the IAM role that application uses. Click on it to modify it. On the next screen click on **Add Permissions** and **Attach inline policy**. In the JSON view paste the following permissions, save, and name the policy “KafakPolicy”.
 ```
 {
- "Version": "2012-10-17",
- "Statement": [
- {
- "Action": [
- "kafka-cluster:AlterCluster",
- "kafka-cluster:Connect",
- "kafka-cluster:DescribeCluster",
- "kafka:DescribeCluster",
- "kafka:DescribeClusterV2",
- "kafka:GetBootstrapBrokers",
- "kafka-cluster:\*Topic\*",
- "kafka-cluster:ReadData",
- "kafka-cluster:WriteData",
- "kafka-cluster:AlterGroup",
- "kafka-cluster:DescribeGroup"
- ],
- "Resource": "\*",
- "Effect": "Allow"
- },
- {
- "Action": [
- "logs:CreateLogGroup",
- "logs:CreateLogStream",
- "logs:DescribeLogGroups",
- "logs:DescribeLogStreams",
- "logs:PutLogEvents"
- ],
- "Resource": "arn:aws:logs:us-east-1:177139033658:\*",
- "Effect": "Allow"
- },
- {
- "Action": [
- "cloudwatch:PutMetricData",
- "ec2:DescribeSecurityGroups",
- "ec2:DescribeSubnets",
- "ec2:DescribeVpcs"
- ],
- "Resource": "\*",
- "Effect": "Allow"
- }
- ]
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "kafka-cluster:AlterCluster",
+        "kafka-cluster:Connect",
+        "kafka-cluster:DescribeCluster",
+        "kafka:DescribeCluster",
+        "kafka:DescribeClusterV2",
+        "kafka:GetBootstrapBrokers",
+        "kafka-cluster:*Topic*",
+        "kafka-cluster:ReadData",
+        "kafka-cluster:WriteData",
+        "kafka-cluster:AlterGroup",
+        "kafka-cluster:DescribeGroup"
+      ],
+      "Resource": "*",
+      "Effect": "Allow"
+    },
+    {
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:DescribeLogGroups",
+        "logs:DescribeLogStreams",
+        "logs:PutLogEvents"
+      ],
+      "Resource": "arn:aws:logs:us-east-1:<your-account-ID>:*",
+      "Effect": "Allow"
+    },
+    {
+      "Action": [
+        "cloudwatch:PutMetricData",
+        "ec2:DescribeSecurityGroups",
+        "ec2:DescribeSubnets",
+        "ec2:DescribeVpcs"
+      ],
+      "Resource": "*",
+      "Effect": "Allow"
+    }
+  ]
 }
+
 ```
 ### Run the punktransfers application:
 
