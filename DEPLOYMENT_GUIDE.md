@@ -323,7 +323,7 @@ Set the runtime properties to inform the application of the Kafka cluster:
 Set the group ID to config, the Key to MSK\_BOOTSTRAP\_SERVERS and the value to the bootstrap servers for your cluster. You can get the from the MSK console or vial AWS CLI:
 ```
 MSK_CLUSTER_ARN=$(aws cloudformation describe-stacks --stack-name Indexer --query "Stacks[0].Outputs[?OutputKey=='KafkaClusterArn'].OutputValue" --output text)
-MSK_BOOTSTRAP_SERVERS=$(aws kafka get-bootstrap-brokers --cluster-arn $KAFKA_CLUSTER_ARN --query "BootstrapBrokerStringSaslIam" --output text)
+MSK_BOOTSTRAP_SERVERS=$(aws kafka get-bootstrap-brokers --cluster-arn $MSK_CLUSTER_ARN --query "BootstrapBrokerStringSaslIam" --output text)
 echo ""
 echo Runtime parameters for Flink application
 echo
