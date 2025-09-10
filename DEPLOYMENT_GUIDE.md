@@ -189,21 +189,21 @@ On your **local machine**, tar the exex source code and upload it to S3. Make su
 `tar -czvf kafka-emitter.tar.gz --exclude="./kafka-emitter-exex/target" kafka-emitter-exex`
 
 ### Get S3 Bucket
-`TRANSFER\_BUCKET=$(aws s3api list-buckets --query 'Buckets[?starts\_with(Name, `blockchain-indexer-file-transfer`)].Name' --output text)`
+`TRANSFER_BUCKET=$(aws s3api list-buckets --query "Buckets[?starts_with(Name, 'blockchain-indexer-file-transfer')].Name" --output text)`
 
 ### Upload archive
-`aws s3 cp kafka-emitter.tar.gz s3://${TRANSFER\_BUCKET}`
+`aws s3 cp kafka-emitter.tar.gz s3://${TRANSFER_BUCKET}`
 
 Back on the **EC2 instance** (make sure you’re user blockchain) download the source code:
 
 ### Get S3 Bucket
 ```
 cd /home/blockchain
-TRANSFER\_BUCKET=$(aws s3api list-buckets --query 'Buckets[?starts\_with(Name, `blockchain-indexer-file-transfer`)].Name' --output text)
+TRANSFER_BUCKET=$(aws s3api list-buckets --query 'Buckets[?starts\_with(Name, 'blockchain-indexer-file-transfer')].Name' --output text)
 ```
 
 ### Download archive
-`aws s3 cp s3://${TRANSFER\_BUCKET}/kafka-emitter.tar.gz .`
+`aws s3 cp s3://${TRANSFER_BUCKET}/kafka-emitter.tar.gz .`
 
 ### Extract archive
 `tar -xzf kafka-emitter.tar.gz`
