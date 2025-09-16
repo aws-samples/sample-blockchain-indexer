@@ -10,7 +10,7 @@ This project provides a complete solution for running a blockchain indexer on AW
 
 When fully deployed, the project has this architecture:
 
-![Architecture](./architecture.png)
+![Architecture](./static/architecture.png)
 
 ## Project Structure
 
@@ -45,6 +45,8 @@ Before getting started, ensure you have:
 - Rust toolchain (for the Kafka emitter)
 
 ## Deployment Steps
+
+These are simplified deployment steps to get started quickly with this sample indexer. See the [full deployment guide](DEPLOYMENT_GUIDE.md) for a detailed step-by-step set of instructions.
 
 ### Step 1: Infrastructure (CDK)
 
